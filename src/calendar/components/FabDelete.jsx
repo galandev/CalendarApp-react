@@ -1,5 +1,5 @@
 
-import { useCalendarStore } from "../../hooks/useCalendarStore";
+import { useCalendarStore } from "../../hooks";
 
 export const FabDelete = () => {
 
