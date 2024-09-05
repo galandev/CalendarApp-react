@@ -1,4 +1,4 @@
-const { renderHook } = require("@testing-library/react");
+const { renderHook, act } = require("@testing-library/react");
 const { useUIStore } = require("../../src/hooks");
 const { Provider } = require("react-redux");
 const { uiSlice } = require("../../src/store");
@@ -33,9 +33,46 @@ describe('Pruebas en useUiStore', () => {
     });
 
     test('openDateModal debe colocar true en el isDateModalOpen', () => {
+        const mockStore = getMockStore({ isDateModalOpen: false });
+        const { result } = renderHook( () => useUIStore(), {
+            wrapper: ({ children }) => <Provider store={ mockStore }>{ children }</Provider> 
+        });
+
+        act( () => {
+            result.current.openDateModal();
+        });
+
+        expect( result.current.isDateModalOpen ).toBeTruthy();
+    });
+
+    test('closeDateModal debe colocar false en el isDateModalOpen', () => {
         const mockStore = getMockStore({ isDateModalOpen: true });
         const { result } = renderHook( () => useUIStore(), {
             wrapper: ({ children }) => <Provider store={ mockStore }>{ children }</Provider> 
         });
+
+        act( () => {
+            result.current.closeDateModal();
+        });
+
+        expect( result.current.isDateModalOpen ).toBeFalsy();
     });
+
+    test('toggleDateModal debe cambiar el estado de isDateModalOpen', () => {
+        const mockStore = getMockStore({ isDateModalOpen: true });
+        const { result } = renderHook( () => useUIStore(), {
+            wrapper: ({ children }) => <Provider store={ mockStore }>{ children }</Provider> 
+        });
+
+        act( () => {
+            result.current.toggleDateModal();
+        });
+        expect( result.current.isDateModalOpen ).toBeFalsy();
+
+        act( () => {
+            result.current.toggleDateModal();
+        });
+        expect( result.current.isDateModalOpen ).toBeTruthy();
+    });
+
 });
